@@ -1,6 +1,22 @@
-const { Client } = require('pg')
-const client = new Client()
-await client.connect()
-const res = await client.query('SELECT $1::text as message', ['Hello world!'])
-console.log(res.rows[0].message) // Hello world!
-await client.end()
+import sql from './db.js'
+async function getUsersOver(age) {
+	const users = await sql `
+		select
+			name,
+			age
+		from users
+		where age > ${ age }
+	`
+	return users
+}
+
+async function insertUser( { name, age } ){
+	const users = await sql `
+		insert users
+			(name, age)
+		values 
+			(${ name }, ${ age })
+		returning name, age
+
+		return users
+}
